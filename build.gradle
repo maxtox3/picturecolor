@@ -1,0 +1,50 @@
+allprojects {
+    buildscript {
+        repositories {
+            maven { url "http://kotlin.bintray.com/kotlin-eap" }
+            maven { url "http://kotlin.bintray.com/kotlin-dev" }
+            maven { url "https://kotlin.bintray.com/kotlinx" }
+            maven { url 'https://dl.bintray.com/jetbrains/kotlin-native-dependencies' }
+            maven { url "https://dl.bintray.com/kotlin/ktor" }
+            maven { url "https://dl.bintray.com/badoo/maven" }
+
+            google()
+            jcenter()
+        }
+        dependencies {
+            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_gradle_plugin_version"
+            classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+            classpath "org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.45"
+//            classpath "org.jetbrains.kotlin:kotlin-native-gradle-plugin:$kotlin_native_version"
+        }
+    }
+    repositories {
+        maven { url "http://kotlin.bintray.com/kotlin-eap" }
+        maven { url "http://kotlin.bintray.com/kotlin-dev" }
+        maven { url "https://kotlin.bintray.com/kotlinx" }
+        maven { url "https://dl.bintray.com/kotlin/ktor" }
+        maven { url "https://dl.bintray.com/sargunster/maven" }
+        maven { url "https://dl.bintray.com/kotlin/squash" }
+        maven { url "http://dl.bintray.com/kotlin/kotlin-js-wrappers" }
+        maven { url 'https://dl.bintray.com/russhwolf/multiplatform-settings' }
+        maven { url "https://dl.bintray.com/badoo/maven" }
+        google()
+        jcenter()
+    }
+}
+
+allprojects {
+    // TODO remove once https://github.com/Kotlin/kotlin-frontend-plugin/issues/141 is fixed
+    plugins.whenPluginAdded { plugin ->
+        if (plugin.class.name == 'org.jetbrains.kotlin.gradle.frontend.FrontendPlugin') {
+            def fixTask = tasks.register('webpack-config-fix') {
+                it.doLast { file('webpack.config.d').mkdir() }
+            }
+            afterEvaluate {
+                tasks.named('webpack-config').configure {
+                    it.dependsOn(fixTask)
+                }
+            }
+        }
+    }
+}

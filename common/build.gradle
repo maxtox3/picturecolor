@@ -1,0 +1,26 @@
+apply plugin: 'kotlin-platform-common'
+apply plugin: 'kotlinx-serialization'
+
+repositories {
+    mavenCentral()
+}
+
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serialization_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutines_version"
+
+    implementation "io.ktor:ktor-client-core:$ktor_version"
+    implementation "io.ktor:ktor-client-serialization:$ktor_version"
+
+    compile "com.badoo.reaktive:reaktive:1.0.0-rc2"
+    compile "com.badoo.reaktive:reaktive-annotations:1.0.0-rc2"
+
+}
