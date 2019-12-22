@@ -1,19 +1,19 @@
-package com.picturecolor.client.newmvi.login.binder
+package com.picturecolor.client.newmvi.researchlist.binder
 
 import com.badoo.reaktive.disposable.CompositeDisposable
 import com.badoo.reaktive.observable.map
 import com.badoo.reaktive.observable.subscribe
-import com.picturecolor.client.newmvi.login.store.LoginStore
-import com.picturecolor.client.newmvi.login.view.LoginView
+import com.picturecolor.client.newmvi.researchlist.store.TestStore
+import com.picturecolor.client.newmvi.researchlist.view.TestView
 
-class LoginBinder(
-  private val store: LoginStore
+class TestBinder(
+  private val store: TestStore
 ) {
 
   private var disposables = CompositeDisposable()
-  private var view: LoginView? = null
+  private var view: TestView? = null
 
-  fun attachView(view: LoginView) {
+  fun attachView(view: TestView) {
     this.view = view
   }
 
@@ -21,13 +21,13 @@ class LoginBinder(
     disposables.add(
       requireNotNull(view)
         .events
-        .map(LoginViewEventToIntentMapper::invoke)
+        .map(TestViewEventToIntentMapper::invoke)
         .subscribe(isThreadLocal = true, onNext = store::accept))
 
     disposables.add(
       store
         .states
-        .map(LoginStateToViewModelMapper::invoke)
+        .map(TestStateToViewModelMapper::invoke)
         .subscribe(isThreadLocal = true, onNext = { requireNotNull(view).show(it) }))
   }
 

@@ -5,7 +5,6 @@ import com.picturecolor.client.material.list.mListItemWithIcon
 import com.picturecolor.client.material.mDivider
 import com.picturecolor.client.material.themeContext
 import com.picturecolor.client.material.toolbarJsCssToPartialCss
-import com.picturecolor.client.model.SelectedArea
 import kotlinx.css.*
 import kotlinx.html.Tag
 import kotlinx.html.classes
@@ -17,7 +16,6 @@ import react.ReactElement
 import react.dom.*
 import styled.css
 import styled.styledDiv
-import kotlin.math.round
 
 fun RBuilder.alert(message: String = "") = if (message.isNotEmpty()) {
   div("alert alert-danger") {
@@ -39,25 +37,6 @@ fun RBuilder.loading(isLoading: Boolean) = if (isLoading) {
 
 object EmptyElement : ReactElement {
   override val props = object : RProps {}
-}
-
-fun RDOMBuilder<Tag>.selectedArea(
-  deleteListener: (area: SelectedArea) -> Unit,
-  data: SelectedArea
-) {
-  tr {
-    td { +round(data.x).toString() }
-    td { +round(data.y).toString() }
-    td { +round(data.z).toString() }
-    td { +round(data.size).toString() }
-    td { options() }
-    td {
-      button {
-        +"X"
-        attrs.onClickFunction = { deleteListener(data) }
-      }
-    }
-  }
 }
 
 fun RDOMBuilder<Tag>.options() {

@@ -29,7 +29,7 @@ internal class LoginStoreImpl(
   }
 
   override fun accept(intent: Intent) {
-    execute(intent)?.also(disposables::add)
+    execute(intent)?.also{disposables.add(it)}
   }
 
   private fun execute(intent: Intent): Disposable? =

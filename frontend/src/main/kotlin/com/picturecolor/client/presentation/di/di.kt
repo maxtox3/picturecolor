@@ -1,15 +1,21 @@
 package com.picturecolor.client.presentation.di
 
 import com.picturecolor.client.data.JsLocalDataSource
-import com.picturecolor.client.data.datasource.remote.*
-import com.picturecolor.client.domain.repository.*
-import com.picturecolor.client.newmvi.ResearchContainer
+import com.picturecolor.client.data.datasource.remote.LoginRemote
+import com.picturecolor.client.data.datasource.remote.LoginRemoteDataSource
+import com.picturecolor.client.data.datasource.remote.ResearchRemoteDataSource
+import com.picturecolor.client.data.datasource.remote.TestRemote
+import com.picturecolor.client.domain.repository.LoginRepository
+import com.picturecolor.client.domain.repository.LoginRepositoryImpl
+import com.picturecolor.client.domain.repository.ResearchRepositoryImpl
+import com.picturecolor.client.domain.repository.TestRepository
 import com.picturecolor.client.newmvi.login.binder.LoginBinder
-import com.picturecolor.client.newmvi.login.store.*
-import com.picturecolor.client.newmvi.researchlist.binder.ResearchListBinder
+import com.picturecolor.client.newmvi.login.store.LoginProcessor
+import com.picturecolor.client.newmvi.login.store.LoginProcessorImpl
+import com.picturecolor.client.newmvi.login.store.LoginStore
+import com.picturecolor.client.newmvi.login.store.LoginStoreImpl
+import com.picturecolor.client.newmvi.researchlist.binder.TestBinder
 import com.picturecolor.client.newmvi.researchlist.store.*
-import com.picturecolor.client.newmvi.researchmvi.binder.ResearchBinder
-import com.picturecolor.client.newmvi.researchmvi.store.*
 
 val local = JsLocalDataSource()
 
@@ -19,8 +25,8 @@ val loginRepository: LoginRepository = LoginRepositoryImpl(
   remote = remoteLoginDataSource
 )
 
-val remoteResearchDataSource: ResearchRemote = ResearchRemoteDataSource()
-val researchRepository: ResearchRepository = ResearchRepositoryImpl(
+val remoteResearchDataSource: TestRemote = ResearchRemoteDataSource()
+val testRepository: TestRepository = ResearchRepositoryImpl(
   local = local,
   remote = remoteResearchDataSource
 )
@@ -30,21 +36,19 @@ val loginStore: LoginStore = LoginStoreImpl(loginProcessor)
 val loginBinder = LoginBinder(loginStore)
 fun injectLogin(): LoginBinder = loginBinder
 
-val researchListLoader: ResearchListLoader = ResearchListLoaderImpl(researchRepository)
-val researchListStore: ResearchListStore = ResearchListStoreImpl(researchListLoader)
-val researchListBinder = ResearchListBinder(researchListStore)
-fun injectResearchList(): ResearchListBinder = researchListBinder
+val testLoader: TestLoader = TestLoaderImpl(testRepository)
+val imageLoader: ImageLoader = ImageLoaderImpl(testRepository)
+val researchListStore: TestStore = TestStoreImpl(testLoader, imageLoader)
+val researchListBinder = TestBinder(researchListStore)
+fun injectResearchList(): TestBinder = researchListBinder
 
-val researchLoader: ResearchDataLoader = ResearchDataLoaderImpl(researchRepository)
-val marksLoader: ResearchMarksLoader = ResearchMarksLoaderImpl(researchRepository)
-val researchStore: ResearchStore = ResearchStoreImpl(
-  researchLoader,
-  marksLoader
-)
-
-fun injectNewResearch(): ResearchBinder = ResearchBinder(
-  researchStore,
-  ResearchContainer.deleteAreaObservable,
-  ResearchContainer.newAreaToSaveObservable,
-  ResearchContainer.areaToUpdateObservable
-)
+//val researchLoader: ResearchDataLoader = ResearchDataLoaderImpl(testRepository)
+//val marksLoader: ResearchMarksLoader = ResearchMarksLoaderImpl(testRepository)
+//val researchStore: ResearchStore = ResearchStoreImpl(
+//  researchLoader,
+//  marksLoader
+//)
+//
+//fun injectNewResearch(): ResearchBinder = ResearchBinder(
+//  researchStore
+//)

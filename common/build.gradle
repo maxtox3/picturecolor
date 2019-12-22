@@ -20,7 +20,9 @@ dependencies {
     implementation "io.ktor:ktor-client-core:$ktor_version"
     implementation "io.ktor:ktor-client-serialization:$ktor_version"
 
-    compile "com.badoo.reaktive:reaktive:1.0.0-rc2"
-    compile "com.badoo.reaktive:reaktive-annotations:1.0.0-rc2"
+    compile "com.badoo.reaktive:reaktive:$reaktive_version"
+    compile "com.badoo.reaktive:reaktive-annotations:$reaktive_version"
+    compile "com.badoo.reaktive:coroutines-interop:$reaktive_version"
+    compile "com.badoo.reaktive:utils:$reaktive_version"
 
 }

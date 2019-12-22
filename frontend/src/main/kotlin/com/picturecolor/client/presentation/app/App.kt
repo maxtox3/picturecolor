@@ -1,14 +1,15 @@
 package com.picturecolor.client.presentation.app
 
-import com.picturecolor.client.material.Colors
-import com.picturecolor.client.material.mCssBaseline
-import com.picturecolor.client.material.mThemeProvider
+import com.picturecolor.client.material.*
 import com.picturecolor.client.material.styles.ThemeOptions
 import com.picturecolor.client.material.styles.createMuiTheme
 import com.picturecolor.client.presentation.navigator.Screen
 import com.picturecolor.client.presentation.screen.*
 import debugLog
+import kotlinx.css.*
 import react.*
+import styled.css
+import styled.styledDiv
 
 abstract class App : RComponent<RProps, AppState>() {
 
@@ -26,18 +27,32 @@ abstract class App : RComponent<RProps, AppState>() {
     themeOptions.palette?.primary.main = Colors.Pink.shade500.toString()
     themeOptions.spacing = 1
     mThemeProvider(createMuiTheme(themeOptions)) {
-      debugLog("state: ${state.screen}")
-      when (state.screen) {
-        Screen.AUTH -> auth {
-          setState { screen = Screen.QUESTION }
+      mContainer {
+        attrs {
+          component = "main"
+          maxWidth = "xs"
         }
-        Screen.QUESTION -> question {
-          setState { screen = Screen.RESULT }
+        mCssBaseline()
+        styledDiv {
+          css {
+            marginTop = 9.spacingUnits
+            display = Display.flex
+            flexDirection = FlexDirection.column
+            alignItems = Align.center
+          }
+          debugLog("state: ${state.screen}")
+          when (state.screen) {
+            Screen.AUTH -> auth {
+              setState { screen = Screen.QUESTION }
+            }
+            Screen.QUESTION -> question {
+              setState { screen = Screen.RESULT }
+            }
+            Screen.RESULT -> result()
+          }
         }
-        Screen.RESULT -> result()
       }
     }
-
   }
 }
 

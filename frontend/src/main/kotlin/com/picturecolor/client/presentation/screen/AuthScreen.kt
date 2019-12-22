@@ -3,7 +3,9 @@ package com.picturecolor.client.presentation.screen
 import com.badoo.reaktive.subject.publish.PublishSubject
 import com.badoo.reaktive.subject.publish.publishSubject
 import com.picturecolor.client.material.*
-import com.picturecolor.client.material.button.*
+import com.picturecolor.client.material.button.MButtonSize
+import com.picturecolor.client.material.button.MButtonVariant
+import com.picturecolor.client.material.button.mButton
 import com.picturecolor.client.material.form.MFormControlMargin
 import com.picturecolor.client.material.form.MFormControlVariant
 import com.picturecolor.client.newmvi.login.view.LoginView
@@ -13,7 +15,9 @@ import kotlinx.html.js.onSubmitFunction
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
 import react.*
-import styled.*
+import styled.css
+import styled.styledDiv
+import styled.styledForm
 
 class AuthScreen(props: AuthProps) :
   RComponent<AuthProps, AuthState>(props), LoginView {
@@ -40,109 +44,87 @@ class AuthScreen(props: AuthProps) :
 
   override fun RBuilder.render() {
     themeContext.Consumer { theme ->
-      mContainer {
+      mTypography {
         attrs {
-          component = "main"
-          maxWidth = "xs"
+          component = "h1"
+          variant = MTypographyVariant.h5
         }
-        mCssBaseline()
+        +"Давайте знакомиться"
+      }
+      styledForm {
+        attrs.onSubmitFunction = {
+          //todo()
+        }
+        css {
+          width = 100.pct
+          marginTop = 1.spacingUnits
+        }
+        attrs {
+          novalidate = true
+        }
+        mTextField(
+          variant = MFormControlVariant.outlined,
+          margin = MFormControlMargin.normal,
+          id = "firstName",
+          label = "Ваше имя",
+          name = "firstName",
+          autoComplete = "firstName",
+          autoFocus = true,
+          fullWidth = true
+        ) {
+          attrs {
+            required = true
+            onChange = ::onFirstNameChanged
+            inputLabelProps = object : RProps {
+              val shrink = true
+            }
+          }
+        }
+        mTextField(
+          variant = MFormControlVariant.outlined,
+          margin = MFormControlMargin.normal,
+          id = "secondName",
+          label = "Ваша фамилия",
+          name = "secondName",
+          autoComplete = "secondName",
+          fullWidth = true
+        ) {
+          attrs {
+            required = true
+            onChange = ::onSecondNameChanged
+            inputLabelProps = object : RProps {
+              val shrink = true
+            }
+          }
+        }
         styledDiv {
           css {
-            marginTop = 9.spacingUnits
-            display = Display.flex
-            flexDirection = FlexDirection.column
-            alignItems = Align.center
+            margin(3.spacingUnits, 0.spacingUnits, 2.spacingUnits)
+            position = Position.relative
           }
-          mAvatar {
-            css {
-              margin(1.spacingUnits)
-              backgroundColor = Color(theme.palette.secondary.main)
-            }
-            mIcon("lock_open")
-          }
-          mTypography {
+          mButton(
+            "Начнём!",
+            size = MButtonSize.large,
+            disabled = state.loading,
+            variant = MButtonVariant.contained,
+            color = MColor.primary
+          ) {
             attrs {
-              component = "h1"
-              variant = MTypographyVariant.h5
-            }
-            +"Давайте знакомиться"
-          }
-          styledForm {
-            attrs.onSubmitFunction = {
-              //todo()
-            }
-            css {
-              width = 100.pct
-              marginTop = 1.spacingUnits
-            }
-            attrs {
-              novalidate = true
-            }
-            mTextField(
-              variant = MFormControlVariant.outlined,
-              margin = MFormControlMargin.normal,
-              id = "firstName",
-              label = "Ваше имя",
-              name = "firstName",
-              autoComplete = "firstName",
-              autoFocus = true,
               fullWidth = true
-            ) {
-              attrs {
-                required = true
-                onChange = ::onFirstNameChanged
-                inputLabelProps = object : RProps {
-                  val shrink = true
-                }
+              onClick = {
+                dispatch(LoginView.Event.Auth(state.firstName, state.secondName))
               }
             }
-            mTextField(
-              variant = MFormControlVariant.outlined,
-              margin = MFormControlMargin.normal,
-              id = "secondName",
-              label = "Ваша фамилия",
-              name = "secondName",
-              autoComplete = "secondName",
-              fullWidth = true
-            ) {
-              attrs {
-                required = true
-                onChange = ::onSecondNameChanged
-                inputLabelProps = object : RProps {
-                  val shrink = true
-                }
-              }
-            }
-            styledDiv {
+          }
+          if (state.loading) {
+            mCircularProgress(size = 24.px) {
               css {
-                margin(3.spacingUnits, 0.spacingUnits, 2.spacingUnits)
-                position = Position.relative
-              }
-              mButton(
-                "Начнём!",
-                size = MButtonSize.large,
-                disabled = state.loading,
-                variant = MButtonVariant.contained,
-                color = MColor.primary
-              ) {
-                attrs {
-                  fullWidth = true
-                  onClick = {
-                    dispatch(LoginView.Event.Auth(state.firstName, state.secondName))
-                  }
-                }
-              }
-              if (state.loading) {
-                mCircularProgress(size = 24.px) {
-                  css {
-                    color = Colors.Blue.shade500
-                    position = Position.absolute
-                    top = 50.pct
-                    left = 50.pct
-                    marginTop = -12.px
-                    marginLeft = -12.px
-                  }
-                }
+                color = Colors.Blue.shade500
+                position = Position.absolute
+                top = 50.pct
+                left = 50.pct
+                marginTop = (-12).px
+                marginLeft = (-12).px
               }
             }
           }

@@ -1,51 +1,24 @@
 package com.picturecolor.client.presentation.screen
 
-import com.badoo.reaktive.subject.publish.PublishSubject
-import com.badoo.reaktive.subject.publish.publishSubject
-import com.picturecolor.client.constants.CutsGridType
 import com.picturecolor.client.material.*
 import com.picturecolor.client.material.button.mIconButton
-import com.picturecolor.client.model.GridModel
-import com.picturecolor.client.model.ResearchSlicesSizesData
-import com.picturecolor.client.newmvi.researchmvi.view.ResearchView
-import com.picturecolor.client.presentation.di.injectNewResearch
 import com.picturecolor.client.presentation.screen.ComponentStyles.appFrameContainerStyle
 import com.picturecolor.client.presentation.screen.ComponentStyles.mainContentContainerStyle
 import kotlinext.js.jsObject
 import kotlinx.css.*
 import kotlinx.html.DIV
-import org.w3c.dom.events.KeyboardEvent
 import react.*
 import react.dom.div
 import react.dom.jsStyle
-import styled.*
-import kotlin.browser.window
+import styled.StyleSheet
+import styled.StyledDOMBuilder
+import styled.css
+import styled.styledDiv
 
 class ResearchScreen(props: ResearchProps) :
-  RComponent<ResearchProps, ResearchState>(props), ResearchView {
+  RComponent<ResearchProps, ResearchState>(props) {
 
   private val drawerWidth = 300
-  private val binder = injectNewResearch()
-  override val events: PublishSubject<ResearchView.Event> = publishSubject()
-
-  override fun show(model: ResearchView.ResearchViewModel) {
-    setState {
-      loading = model.isLoading
-      error = model.error
-      data = model.data
-      gridModel = model.gridModel
-    }
-  }
-
-  override fun componentDidMount() {
-    binder.attachView(this@ResearchScreen)
-    binder.onStart()
-    window.addEventListener(type = "keydown", callback = {
-      val keyboardEvent = it as KeyboardEvent
-      if (keyboardEvent.keyCode == 8 || keyboardEvent.keyCode == 46)
-        dispatch(ResearchView.Event.Delete)
-    })
-  }
 
   override fun RBuilder.render() {
     mCssBaseline()
@@ -109,14 +82,6 @@ class ResearchScreen(props: ResearchProps) :
     }
   }
 
-  override fun componentWillUnmount() {
-    binder.detachView()
-    binder.onStop()
-  }
-
-  override fun dispatch(event: ResearchView.Event) {
-    events.onNext(event)
-  }
 }
 
 object ComponentStyles : StyleSheet("ComponentStyles", isStatic = true) {
@@ -160,10 +125,8 @@ object ComponentStyles : StyleSheet("ComponentStyles", isStatic = true) {
 class ResearchState : RState {
   var loading: Boolean = true
   var error: String = ""
-  var data: ResearchSlicesSizesData? = null
   var leftDrawerOpen: Boolean = false
   var rightDrawerOpen: Boolean = false
-  var gridModel: GridModel? = null
 }
 
 

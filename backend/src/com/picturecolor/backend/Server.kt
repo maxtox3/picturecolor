@@ -3,7 +3,6 @@ package com.picturecolor.backend
 import com.picturecolor.backend.controller.AuthController
 import com.picturecolor.backend.controller.ResultController
 import com.picturecolor.backend.controller.TestController
-import com.picturecolor.backend.lib.PictureColorObject
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
@@ -91,9 +90,6 @@ fun main(args: Array<String>) {
 
     //create tables if not exists
     init()
-
-    //init lib
-    PictureColorObject.init()
 
     // Modules
     main(
